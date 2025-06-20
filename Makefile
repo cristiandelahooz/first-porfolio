@@ -21,7 +21,7 @@ BLUE := \033[0;34m
 NC := \033[0m # No Color
 
 # Targets por defecto
-.PHONY: help setup install clean test lint format notebook run-analysis check-env download-data all
+.PHONY: help setup install clean test lint format notebook run-analysis check-env download-data all restart-notebook fix-notebook quick-test clear-cache fix-imports clear-cache fix-imports reload-modules
 
 # Target por defecto - muestra ayuda
 help:
@@ -38,10 +38,16 @@ help:
 	@echo "  $(GREEN)check-env$(NC)       - Verifica el entorno de desarrollo"
 	@echo "  $(GREEN)download-data$(NC)   - Descarga datos NLTK necesarios"
 	@echo "  $(GREEN)all$(NC)             - Ejecuta setup, test y verifica todo"
+	@echo "  $(GREEN)restart-notebook$(NC) - Reinicia el notebook con kernel limpio"
+	@echo "  $(GREEN)fix-notebook$(NC)     - Repara problemas comunes del notebook"
+	@echo "  $(GREEN)clear-cache$(NC)      - Limpia cache de imports del notebook"
+	@echo "  $(GREEN)fix-imports$(NC)      - Soluciona problemas de imports completos"
+	@echo "  $(GREEN)quick-test$(NC)       - Ejecuta una prueba rápida de los módulos principales"
 	@echo ""
 	@echo "$(YELLOW)Ejemplos de uso:$(NC)"
 	@echo "  make setup           # Configurar proyecto desde cero"
-	@echo "  make test            # Ejecutar pruebas"
+	@echo "  make fix-notebook    # Solucionar problemas de NLTK y dependencias"
+	@echo "  make quick-test      # Verificar que todo funciona"
 	@echo "  make notebook        # Iniciar Jupyter"
 	@echo "  make run-analysis    # Ejecutar análisis completo"
 
@@ -140,7 +146,7 @@ check-env:
 # Descargar datos NLTK necesarios
 download-data:
 	@echo "$(BLUE)📥 Descargando datos NLTK necesarios...$(NC)"
-	$(PYTHON) -c "import nltk; nltk.download('webtext', quiet=True); nltk.download('stopwords', quiet=True); nltk.download('punkt', quiet=True); nltk.download('wordnet', quiet=True); nltk.download('averaged_perceptron_tagger', quiet=True); nltk.download('vader_lexicon', quiet=True); print('✅ Datos NLTK descargados')"
+	$(PYTHON) -c "import nltk; nltk.download('webtext', quiet=True); nltk.download('stopwords', quiet=True); nltk.download('punkt', quiet=True); nltk.download('punkt_tab', quiet=True); nltk.download('wordnet', quiet=True); nltk.download('averaged_perceptron_tagger', quiet=True); nltk.download('vader_lexicon', quiet=True); print('✅ Datos NLTK descargados')"
 	@echo "$(GREEN)✅ Descarga de datos completada$(NC)"
 
 # Crear directorios necesarios
@@ -210,3 +216,67 @@ stats:
 	@find $(NOTEBOOK_DIR)/ -name "*.ipynb" | wc -l
 	@echo "$(YELLOW)Tamaño del proyecto:$(NC)"
 	@du -sh . 2>/dev/null || echo "No disponible"
+
+# Reiniciar notebook con kernel limpio
+restart-notebook:
+	@echo "$(BLUE)🔄 Reiniciando notebook con kernel limpio...$(NC)"
+	@echo "$(YELLOW)💡 Esto cerrará cualquier sesión activa de Jupyter$(NC)"
+	@pkill -f "jupyter" 2>/dev/null || true
+	@sleep 2
+	jupyter notebook --port=$(NOTEBOOK_PORT) --no-browser --ip=127.0.0.1
+
+# Reparar problemas comunes del notebook
+fix-notebook:
+	@echo "$(BLUE)🔧 Reparando problemas comunes del notebook...$(NC)"
+	@echo "$(YELLOW)1. Descargando datos NLTK...$(NC)"
+	@$(MAKE) download-data
+	@echo "$(YELLOW)2. Verificando dependencias...$(NC)"
+	@$(PIP) install --upgrade -r requirements.txt
+	@echo "$(YELLOW)3. Limpiando cache...$(NC)"
+	@$(MAKE) clean
+	@echo "$(GREEN)✅ Reparación completada$(NC)"
+	@echo "$(YELLOW)💡 Ahora puedes ejecutar: make restart-notebook$(NC)"
+
+# Limpiar cache de imports del notebook
+clear-cache:
+	@echo "$(BLUE)🧹 Limpiando cache de imports...$(NC)"
+	@find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+	@find . -type f -name "*.pyc" -delete 2>/dev/null || true
+	@echo "$(GREEN)✅ Cache limpiado$(NC)"
+	@echo "$(YELLOW)💡 Si el notebook sigue con problemas de import, reinicia el kernel$(NC)"
+
+# Target combinado para solucionar problemas de imports
+fix-imports: clear-cache download-data
+	@echo "$(BLUE)🔧 Solucionando problemas de imports...$(NC)"
+	@echo "$(YELLOW)1. Cache limpiado$(NC)"
+	@echo "$(YELLOW)2. Datos NLTK verificados$(NC)"
+	@echo "$(YELLOW)3. Prueba rápida de módulos...$(NC)"
+	@$(MAKE) quick-test
+	@echo "$(GREEN)✅ Problemas de imports solucionados$(NC)"
+
+# Ejecutar una prueba rápida de los módulos principales
+quick-test:
+	@echo "$(BLUE)⚡ Ejecutando prueba rápida...$(NC)"
+	@echo "$(YELLOW)Probando imports principales...$(NC)"
+	$(PYTHON) -c "import sys; sys.path.append('.'); from src.data_ingestion import GestorDatosTexto; print('✅ GestorDatosTexto OK')"
+	$(PYTHON) -c "import sys; sys.path.append('.'); from src.data_cleaning import DataCleaner; dc = DataCleaner(); print('✅ DataCleaner OK'); print('✅ Métodos disponibles:', [m for m in dir(dc) if not m.startswith('_')][:5], '...')"
+	$(PYTHON) -c "import nltk; from nltk.tokenize import sent_tokenize; print('✅ NLTK OK')"
+	$(PYTHON) -c "import pandas as pd; import numpy as np; print('✅ Pandas/Numpy OK')"
+	@echo "$(GREEN)✅ Prueba rápida completada$(NC)"
+
+# Forzar reload de módulos en notebook
+reload-modules:
+	@echo "$(BLUE)🔄 Creando script para reload de módulos...$(NC)"
+	@echo "# Script para reload de módulos en notebook" > reload_modules.py
+	@echo "import importlib" >> reload_modules.py
+	@echo "import sys" >> reload_modules.py
+	@echo "# Reload de módulos principales" >> reload_modules.py
+	@echo "if 'src.data_cleaning' in sys.modules:" >> reload_modules.py
+	@echo "    importlib.reload(sys.modules['src.data_cleaning'])" >> reload_modules.py
+	@echo "if 'src.data_ingestion' in sys.modules:" >> reload_modules.py
+	@echo "    importlib.reload(sys.modules['src.data_ingestion'])" >> reload_modules.py
+	@echo "if 'src.utils' in sys.modules:" >> reload_modules.py
+	@echo "    importlib.reload(sys.modules['src.utils'])" >> reload_modules.py
+	@echo "print('✅ Módulos recargados - reinicia las imports en el notebook')" >> reload_modules.py
+	@echo "$(GREEN)✅ Script creado: reload_modules.py$(NC)"
+	@echo "$(YELLOW)💡 Ejecuta: %run reload_modules.py en el notebook$(NC)"
