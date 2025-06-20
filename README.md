@@ -1,22 +1,22 @@
-# 🚀 Proyecto de Análisis de Texto y NLP - Portafolio Profesional
+# Proyecto de Análisis de Texto y NLP - Portafolio Profesional
 
 [![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-orange.svg)](https://jupyter.org/)
 [![NLTK](https://img.shields.io/badge/NLTK-3.9+-green.svg)](https://www.nltk.org/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## 📋 Descripción
+## Descripción
 
 Este proyecto implementa un sistema completo y profesional de análisis de texto y procesamiento de lenguaje natural (NLP) aplicado al corpus webtext de NLTK. El proyecto ha sido completamente reestructurado siguiendo las mejores prácticas de ciencia de datos y desarrollo de software.
 
 ### ✨ Características Principales
 
-- **🏗️ Arquitectura Modular**: Separación clara de responsabilidades
-- **🔍 Tipado Estático**: Implementación completa con `typing`
+- **Arquitectura Modular**: Separación clara de responsabilidades
+- **Tipado Estático**: Implementación completa con `typing`
 - **🧪 Pruebas Unitarias**: Validación automática de funcionalidad
-- **📊 Análisis Completo**: Desde ingesta hasta visualización
+- **Análisis Completo**: Desde ingesta hasta visualización
 - **🤖 Automatización**: Scripts para limpieza y procesamiento
-- **📖 Documentación**: Español técnico profesional
+- **Documentación**: Español técnico profesional
 
 ## 📁 Estructura del Proyecto
 
@@ -105,7 +105,7 @@ Este proyecto fue desarrollado como parte del curso de NLP. Las contribuciones s
 
 Proyecto académico - Uso educativo.
 
-## 🎯 Estado del Proyecto
+## Estado del Proyecto
 
 ### ✅ Completado
 - [x] **Reestructuración Completa**: Arquitectura modular implementada
@@ -115,7 +115,7 @@ Proyecto académico - Uso educativo.
 - [x] **Pruebas Unitarias**: Validación de funcionalidad modular
 - [x] **Notebook Profesional**: Versión final limpia y estructurada
 
-### 📊 Métricas de Calidad
+### Métricas de Calidad
 - **Cobertura de Tipado**: 100% en módulos principales
 - **Estructura Modular**: 4 módulos especializados
 - **Pruebas**: 3 suites de pruebas implementadas
