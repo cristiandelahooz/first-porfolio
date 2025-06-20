@@ -1,0 +1,3 @@
+[submodule "descriptive-model-apriori"]
+	path = descriptive-model-apriori
+	url = https://github.com/cristiandelahooz/descriptive-model-apriori.git
