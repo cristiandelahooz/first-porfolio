@@ -227,20 +227,20 @@ class DataCleaner:
         Args:
             resultados (Dict[str, Any]): Diccionario con los resultados del proceso_limpieza_completa
         """
-        print("📊 RESUMEN DEL PROCESO DE LIMPIEZA")
+        print("RESUMEN DEL PROCESO DE LIMPIEZA")
         print("=" * 50)
         
         # Texto original
         if "original" in resultados:
             original = resultados["original"]
-            print(f"📝 TEXTO ORIGINAL:")
+            print("TEXTO ORIGINAL:")
             print(f"   • Longitud: {original['longitud']:,} caracteres")
             print(f"   • Palabras: {original['palabras']:,}")
             
         # Limpieza básica
         if "limpieza_basica" in resultados:
             basica = resultados["limpieza_basica"]
-            print(f"\n🧹 LIMPIEZA BÁSICA:")
+            print("\nLIMPIEZA BÁSICA:")
             print(f"   • Longitud: {basica['longitud']:,} caracteres")
             print(f"   • Palabras: {basica['palabras']:,}")
             if "original" in resultados:
@@ -251,7 +251,7 @@ class DataCleaner:
         # Limpieza intermedia
         if "limpieza_intermedia" in resultados:
             intermedia = resultados["limpieza_intermedia"]
-            print(f"\n🔧 LIMPIEZA INTERMEDIA:")
+            print("\nLIMPIEZA INTERMEDIA:")
             print(f"   • Longitud: {intermedia['longitud']:,} caracteres")
             print(f"   • Palabras: {intermedia['palabras']:,}")
             if "limpieza_basica" in resultados:
@@ -261,7 +261,7 @@ class DataCleaner:
         # Tokenización y filtrado
         if "tokenizacion_filtrado" in resultados:
             tokens = resultados["tokenizacion_filtrado"]
-            print(f"\n🔍 TOKENIZACIÓN Y FILTRADO:")
+            print("\nTOKENIZACIÓN Y FILTRADO:")
             print(f"   • Total tokens: {tokens['cantidad_tokens']:,}")
             print(f"   • Tokens únicos: {tokens['tokens_unicos']:,}")
             diversidad = (tokens['tokens_unicos'] / tokens['cantidad_tokens']) * 100 if tokens['cantidad_tokens'] > 0 else 0
@@ -270,7 +270,7 @@ class DataCleaner:
         # Normalización morfológica
         if "normalizacion_morfologica" in resultados:
             norm = resultados["normalizacion_morfologica"]
-            print(f"\n🧬 NORMALIZACIÓN MORFOLÓGICA ({norm['metodo'].upper()}):")
+            print(f"\nNORMALIZACIÓN MORFOLÓGICA ({norm['metodo'].upper()}):")
             print(f"   • Total tokens: {norm['cantidad_tokens']:,}")
             print(f"   • Tokens únicos: {norm['tokens_unicos']:,}")
             diversidad_norm = (norm['tokens_unicos'] / norm['cantidad_tokens']) * 100 if norm['cantidad_tokens'] > 0 else 0
@@ -285,13 +285,13 @@ class DataCleaner:
         # Mostrar muestra del texto final
         if "normalizacion_morfologica" in resultados:
             tokens_finales = resultados["normalizacion_morfologica"]["tokens"]
-            print("📖 MUESTRA DEL TEXTO PROCESADO:")
+            print("MUESTRA DEL TEXTO PROCESADO:")
             muestra = " ".join(tokens_finales[:20])  # Primeras 20 palabras
             print(f"   {muestra}{'...' if len(tokens_finales) > 20 else ''}")
         elif "tokenizacion_filtrado" in resultados:
             tokens_finales = resultados["tokenizacion_filtrado"]["tokens"]
-            print("📖 MUESTRA DEL TEXTO PROCESADO:")
+            print("MUESTRA DEL TEXTO PROCESADO:")
             muestra = " ".join(tokens_finales[:20])  # Primeras 20 palabras
             print(f"   {muestra}{'...' if len(tokens_finales) > 20 else ''}")
         
-        print("✅ Resumen de limpieza completado\n")
+        print("Resumen de limpieza completado\n")
