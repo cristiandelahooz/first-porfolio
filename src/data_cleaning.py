@@ -11,7 +11,7 @@ from nltk.stem import WordNetLemmatizer, PorterStemmer
 from nltk.tokenize import word_tokenize
 
 
-class LimpiadorAvanzadoTexto:
+class DataCleaner:
     """
     Clase especializada para limpieza avanzada y sistemática de datos de texto.
     Implementa múltiples niveles de limpieza con seguimiento de transformaciones.
@@ -21,7 +21,7 @@ class LimpiadorAvanzadoTexto:
         self.idioma: str = idioma
         self.lemmatizador: WordNetLemmatizer = WordNetLemmatizer()
         self.stemmer: PorterStemmer = PorterStemmer()
-        self.palabras_vacias: set[str] = set(stopwords.words(idioma))
+        self.palabras_vacias: set[str] = set(stopwords.words(idioma))  # type: ignore
         self.historial_limpieza: Dict[str, Any] = {}
 
         # Patrones de expresiones regulares para limpieza
@@ -152,7 +152,7 @@ class LimpiadorAvanzadoTexto:
         if metodo == "lemmatization":
             return [self.lemmatizador.lemmatize(token) for token in tokens]
         elif metodo == "stemming":
-            return [self.stemmer.stem(token) for token in tokens]
+            return [self.stemmer.stem(token) for token in tokens] # type: ignore
         else:
             raise ValueError("Método debe ser 'lemmatization' o 'stemming'")
 
@@ -219,3 +219,79 @@ class LimpiadorAvanzadoTexto:
             }
 
         return resultados
+
+    def mostrar_resumen_limpieza(self, resultados: Dict[str, Any]) -> None:
+        """
+        Muestra un resumen detallado de los resultados del proceso de limpieza.
+        
+        Args:
+            resultados (Dict[str, Any]): Diccionario con los resultados del proceso_limpieza_completa
+        """
+        print("📊 RESUMEN DEL PROCESO DE LIMPIEZA")
+        print("=" * 50)
+        
+        # Texto original
+        if "original" in resultados:
+            original = resultados["original"]
+            print(f"📝 TEXTO ORIGINAL:")
+            print(f"   • Longitud: {original['longitud']:,} caracteres")
+            print(f"   • Palabras: {original['palabras']:,}")
+            
+        # Limpieza básica
+        if "limpieza_basica" in resultados:
+            basica = resultados["limpieza_basica"]
+            print(f"\n🧹 LIMPIEZA BÁSICA:")
+            print(f"   • Longitud: {basica['longitud']:,} caracteres")
+            print(f"   • Palabras: {basica['palabras']:,}")
+            if "original" in resultados:
+                reduccion_chars = ((resultados["original"]["longitud"] - basica["longitud"]) / resultados["original"]["longitud"]) * 100
+                reduccion_palabras = ((resultados["original"]["palabras"] - basica["palabras"]) / resultados["original"]["palabras"]) * 100
+                print(f"   • Reducción: {reduccion_chars:.1f}% caracteres, {reduccion_palabras:.1f}% palabras")
+        
+        # Limpieza intermedia
+        if "limpieza_intermedia" in resultados:
+            intermedia = resultados["limpieza_intermedia"]
+            print(f"\n🔧 LIMPIEZA INTERMEDIA:")
+            print(f"   • Longitud: {intermedia['longitud']:,} caracteres")
+            print(f"   • Palabras: {intermedia['palabras']:,}")
+            if "limpieza_basica" in resultados:
+                reduccion = ((resultados["limpieza_basica"]["palabras"] - intermedia["palabras"]) / resultados["limpieza_basica"]["palabras"]) * 100
+                print(f"   • Reducción adicional: {reduccion:.1f}% palabras")
+        
+        # Tokenización y filtrado
+        if "tokenizacion_filtrado" in resultados:
+            tokens = resultados["tokenizacion_filtrado"]
+            print(f"\n🔍 TOKENIZACIÓN Y FILTRADO:")
+            print(f"   • Total tokens: {tokens['cantidad_tokens']:,}")
+            print(f"   • Tokens únicos: {tokens['tokens_unicos']:,}")
+            diversidad = (tokens['tokens_unicos'] / tokens['cantidad_tokens']) * 100 if tokens['cantidad_tokens'] > 0 else 0
+            print(f"   • Diversidad léxica: {diversidad:.1f}%")
+            
+        # Normalización morfológica
+        if "normalizacion_morfologica" in resultados:
+            norm = resultados["normalizacion_morfologica"]
+            print(f"\n🧬 NORMALIZACIÓN MORFOLÓGICA ({norm['metodo'].upper()}):")
+            print(f"   • Total tokens: {norm['cantidad_tokens']:,}")
+            print(f"   • Tokens únicos: {norm['tokens_unicos']:,}")
+            diversidad_norm = (norm['tokens_unicos'] / norm['cantidad_tokens']) * 100 if norm['cantidad_tokens'] > 0 else 0
+            print(f"   • Diversidad léxica: {diversidad_norm:.1f}%")
+            
+            if "tokenizacion_filtrado" in resultados:
+                reduccion_total = ((tokens['tokens_unicos'] - norm['tokens_unicos']) / tokens['tokens_unicos']) * 100
+                print(f"   • Reducción de vocabulario: {reduccion_total:.1f}%")
+        
+        print("\n" + "=" * 50)
+        
+        # Mostrar muestra del texto final
+        if "normalizacion_morfologica" in resultados:
+            tokens_finales = resultados["normalizacion_morfologica"]["tokens"]
+            print("📖 MUESTRA DEL TEXTO PROCESADO:")
+            muestra = " ".join(tokens_finales[:20])  # Primeras 20 palabras
+            print(f"   {muestra}{'...' if len(tokens_finales) > 20 else ''}")
+        elif "tokenizacion_filtrado" in resultados:
+            tokens_finales = resultados["tokenizacion_filtrado"]["tokens"]
+            print("📖 MUESTRA DEL TEXTO PROCESADO:")
+            muestra = " ".join(tokens_finales[:20])  # Primeras 20 palabras
+            print(f"   {muestra}{'...' if len(tokens_finales) > 20 else ''}")
+        
+        print("✅ Resumen de limpieza completado\n")
