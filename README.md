@@ -13,9 +13,9 @@ Este proyecto implementa un sistema completo y profesional de análisis de texto
 
 - **Arquitectura Modular**: Separación clara de responsabilidades
 - **Tipado Estático**: Implementación completa con `typing`
-- **🧪 Pruebas Unitarias**: Validación automática de funcionalidad
+- **Pruebas Unitarias**: Validación automática de funcionalidad
 - **Análisis Completo**: Desde ingesta hasta visualización
-- **🤖 Automatización**: Scripts para limpieza y procesamiento
+- **Automatización**: Scripts para limpieza y procesamiento
 - **Documentación**: Español técnico profesional
 
 ## 📁 Estructura del Proyecto
