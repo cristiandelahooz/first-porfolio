@@ -25,7 +25,7 @@ NC := \033[0m # No Color
 
 # Target por defecto - muestra ayuda
 help:
-	@echo "$(BLUE)🚀 Makefile para Proyecto de Análisis de Texto y NLP$(NC)"
+	@echo "$(BLUE)Makefile para Proyecto de Análisis de Texto y NLP$(NC)"
 	@echo "$(YELLOW)Comandos disponibles:$(NC)"
 	@echo "  $(GREEN)setup$(NC)           - Configuración inicial completa del proyecto"
 	@echo "  $(GREEN)install$(NC)         - Instala dependencias del proyecto"
@@ -54,7 +54,7 @@ help:
 # Configuración inicial completa del proyecto
 setup: check-env install download-data
 	@echo "$(GREEN)✅ Configuración inicial completada$(NC)"
-	@echo "$(YELLOW)📋 Siguiente paso: make notebook o make run-analysis$(NC)"
+	@echo "$(YELLOW)Siguiente paso: make notebook o make run-analysis$(NC)"
 
 # Instalar dependencias
 install:
@@ -65,7 +65,7 @@ install:
 
 # Limpiar archivos temporales y cache
 clean:
-	@echo "$(BLUE)🧹 Limpiando archivos temporales...$(NC)"
+	@echo "$(BLUE)Limpiando archivos temporales...$(NC)"
 	find . -type f -name "*.pyc" -delete
 	find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
 	find . -type d -name "*.egg-info" -exec rm -rf {} + 2>/dev/null || true
@@ -87,11 +87,11 @@ test:
 
 # Verificar estilo de código
 lint:
-	@echo "$(BLUE)🔍 Verificando estilo de código...$(NC)"
+	@echo "$(BLUE)Verificando estilo de código...$(NC)"
 	@if command -v flake8 >/dev/null 2>&1; then \
 		flake8 $(SRC_DIR)/ $(TEST_DIR)/ --max-line-length=88 --extend-ignore=E203,W503; \
 	else \
-		echo "$(YELLOW)⚠️  flake8 no instalado. Instalando...$(NC)"; \
+		echo "$(YELLOW)⚠️ flake8 no instalado. Instalando...$(NC)"; \
 		$(PIP) install flake8; \
 		flake8 $(SRC_DIR)/ $(TEST_DIR)/ --max-line-length=88 --extend-ignore=E203,W503; \
 	fi
@@ -99,11 +99,11 @@ lint:
 
 # Formatear código
 format:
-	@echo "$(BLUE)🎨 Formateando código...$(NC)"
+	@echo "$(BLUE)Formateando código...$(NC)"
 	@if command -v black >/dev/null 2>&1; then \
 		black $(SRC_DIR)/ $(TEST_DIR)/ --line-length=88; \
 	else \
-		echo "$(YELLOW)⚠️  black no instalado. Instalando...$(NC)"; \
+		echo "$(YELLOW)⚠️ black no instalado. Instalando...$(NC)"; \
 		$(PIP) install black; \
 		black $(SRC_DIR)/ $(TEST_DIR)/ --line-length=88; \
 	fi
@@ -111,16 +111,16 @@ format:
 
 # Iniciar Jupyter Notebook
 notebook:
-	@echo "$(BLUE)📓 Iniciando Jupyter Notebook...$(NC)"
-	@echo "$(YELLOW)💡 El notebook se abrirá en: http://localhost:$(NOTEBOOK_PORT)$(NC)"
-	@echo "$(YELLOW)💡 Para detener: Ctrl+C$(NC)"
+	@echo "$(BLUE)Iniciando Jupyter Notebook...$(NC)"
+	@echo "$(YELLOW)El notebook se abrirá en: http://localhost:$(NOTEBOOK_PORT)$(NC)"
+	@echo "$(YELLOW)Para detener: Ctrl+C$(NC)"
 	jupyter notebook --port=$(NOTEBOOK_PORT) --no-browser --ip=127.0.0.1
 
 # Ejecutar análisis completo usando nbconvert
 run-analysis:
-	@echo "$(BLUE)🔬 Ejecutando análisis completo...$(NC)"
+	@echo "$(BLUE)Ejecutando análisis completo...$(NC)"
 	@if [ -f "$(NOTEBOOK_DIR)/analisis_limpio_tipado.ipynb" ]; then \
-		echo "$(YELLOW)📊 Ejecutando notebook principal...$(NC)"; \
+		echo "$(YELLOW)Ejecutando notebook principal...$(NC)"; \
 		jupyter nbconvert --to notebook --execute $(NOTEBOOK_DIR)/analisis_limpio_tipado.ipynb --output=analisis_ejecutado.ipynb; \
 		echo "$(GREEN)✅ Análisis completado. Revisa: $(NOTEBOOK_DIR)/analisis_ejecutado.ipynb$(NC)"; \
 	else \
@@ -130,7 +130,7 @@ run-analysis:
 
 # Verificar entorno de desarrollo
 check-env:
-	@echo "$(BLUE)🔧 Verificando entorno de desarrollo...$(NC)"
+	@echo "$(BLUE)Verificando entorno de desarrollo...$(NC)"
 	@echo "$(YELLOW)Python version:$(NC)"
 	@$(PYTHON) --version
 	@echo "$(YELLOW)Pip version:$(NC)"
@@ -157,7 +157,7 @@ create-dirs:
 
 # Ejecutar análisis modular (usando scripts de Python)
 run-modular:
-	@echo "$(BLUE)🔬 Ejecutando análisis modular...$(NC)"
+	@echo "$(BLUE)Ejecutando análisis modular...$(NC)"
 	@echo "$(YELLOW)1. Probando ingesta de datos...$(NC)"
 	$(PYTHON) -c "from $(SRC_DIR).data_ingestion import GestorDatosTexto; g = GestorDatosTexto(); print('✅ Módulo de ingesta OK')"
 	@echo "$(YELLOW)2. Probando limpieza de datos...$(NC)"
@@ -166,7 +166,7 @@ run-modular:
 
 # Generar reporte de cobertura de pruebas
 coverage:
-	@echo "$(BLUE)📊 Generando reporte de cobertura...$(NC)"
+	@echo "$(BLUE)Generando reporte de cobertura...$(NC)"
 	@if command -v coverage >/dev/null 2>&1; then \
 		coverage run -m pytest $(TEST_DIR)/; \
 		coverage report -m; \
@@ -183,16 +183,16 @@ coverage:
 
 # Ejecutar todo: setup, test, lint
 all: setup test lint
-	@echo "$(GREEN)🎉 Todos los procesos completados exitosamente$(NC)"
-	@echo "$(YELLOW)📋 Proyecto listo para usar:$(NC)"
+	@echo "$(GREEN)Todos los procesos completados exitosamente$(NC)"
+	@echo "$(YELLOW)Proyecto listo para usar:$(NC)"
 	@echo "  - make notebook     # Para análisis interactivo"
 	@echo "  - make run-analysis # Para ejecutar análisis completo"
 
 # Target para desarrollo: watch de archivos y ejecución automática de tests
 dev-watch:
-	@echo "$(BLUE)👁️  Modo desarrollo: observando cambios...$(NC)"
-	@echo "$(YELLOW)💡 Los tests se ejecutarán automáticamente al detectar cambios$(NC)"
-	@echo "$(YELLOW)💡 Para detener: Ctrl+C$(NC)"
+	@echo "$(BLUE) Modo desarrollo: observando cambios...$(NC)"
+	@echo "$(YELLOW)Los tests se ejecutarán automáticamente al detectar cambios$(NC)"
+	@echo "$(YELLOW)Para detener: Ctrl+C$(NC)"
 	@if command -v fswatch >/dev/null 2>&1; then \
 		fswatch -o $(SRC_DIR)/ $(TEST_DIR)/ | xargs -n1 -I{} make test; \
 	else \
@@ -201,13 +201,13 @@ dev-watch:
 
 # Instalar dependencias de desarrollo
 install-dev:
-	@echo "$(BLUE)🛠️  Instalando dependencias de desarrollo...$(NC)"
+	@echo "$(BLUE) Instalando dependencias de desarrollo...$(NC)"
 	$(PIP) install black flake8 pytest coverage jupyter nbconvert
 	@echo "$(GREEN)✅ Dependencias de desarrollo instaladas$(NC)"
 
 # Mostrar estadísticas del proyecto
 stats:
-	@echo "$(BLUE)📈 Estadísticas del proyecto:$(NC)"
+	@echo "$(BLUE)Estadísticas del proyecto:$(NC)"
 	@echo "$(YELLOW)Líneas de código:$(NC)"
 	@find $(SRC_DIR)/ -name "*.py" -exec wc -l {} + | tail -1
 	@echo "$(YELLOW)Archivos de prueba:$(NC)"
@@ -220,14 +220,14 @@ stats:
 # Reiniciar notebook con kernel limpio
 restart-notebook:
 	@echo "$(BLUE)🔄 Reiniciando notebook con kernel limpio...$(NC)"
-	@echo "$(YELLOW)💡 Esto cerrará cualquier sesión activa de Jupyter$(NC)"
+	@echo "$(YELLOW)Esto cerrará cualquier sesión activa de Jupyter$(NC)"
 	@pkill -f "jupyter" 2>/dev/null || true
 	@sleep 2
 	jupyter notebook --port=$(NOTEBOOK_PORT) --no-browser --ip=127.0.0.1
 
 # Reparar problemas comunes del notebook
 fix-notebook:
-	@echo "$(BLUE)🔧 Reparando problemas comunes del notebook...$(NC)"
+	@echo "$(BLUE)Reparando problemas comunes del notebook...$(NC)"
 	@echo "$(YELLOW)1. Descargando datos NLTK...$(NC)"
 	@$(MAKE) download-data
 	@echo "$(YELLOW)2. Verificando dependencias...$(NC)"
@@ -235,19 +235,19 @@ fix-notebook:
 	@echo "$(YELLOW)3. Limpiando cache...$(NC)"
 	@$(MAKE) clean
 	@echo "$(GREEN)✅ Reparación completada$(NC)"
-	@echo "$(YELLOW)💡 Ahora puedes ejecutar: make restart-notebook$(NC)"
+	@echo "$(YELLOW)Ahora puedes ejecutar: make restart-notebook$(NC)"
 
 # Limpiar cache de imports del notebook
 clear-cache:
-	@echo "$(BLUE)🧹 Limpiando cache de imports...$(NC)"
+	@echo "$(BLUE)Limpiando cache de imports...$(NC)"
 	@find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
 	@find . -type f -name "*.pyc" -delete 2>/dev/null || true
 	@echo "$(GREEN)✅ Cache limpiado$(NC)"
-	@echo "$(YELLOW)💡 Si el notebook sigue con problemas de import, reinicia el kernel$(NC)"
+	@echo "$(YELLOW)Si el notebook sigue con problemas de import, reinicia el kernel$(NC)"
 
 # Target combinado para solucionar problemas de imports
 fix-imports: clear-cache download-data
-	@echo "$(BLUE)🔧 Solucionando problemas de imports...$(NC)"
+	@echo "$(BLUE)Solucionando problemas de imports...$(NC)"
 	@echo "$(YELLOW)1. Cache limpiado$(NC)"
 	@echo "$(YELLOW)2. Datos NLTK verificados$(NC)"
 	@echo "$(YELLOW)3. Prueba rápida de módulos...$(NC)"
@@ -256,7 +256,7 @@ fix-imports: clear-cache download-data
 
 # Ejecutar una prueba rápida de los módulos principales
 quick-test:
-	@echo "$(BLUE)⚡ Ejecutando prueba rápida...$(NC)"
+	@echo "$(BLUE)Ejecutando prueba rápida...$(NC)"
 	@echo "$(YELLOW)Probando imports principales...$(NC)"
 	$(PYTHON) -c "import sys; sys.path.append('.'); from src.data_ingestion import GestorDatosTexto; print('✅ GestorDatosTexto OK')"
 	$(PYTHON) -c "import sys; sys.path.append('.'); from src.data_cleaning import DataCleaner; dc = DataCleaner(); print('✅ DataCleaner OK'); print('✅ Métodos disponibles:', [m for m in dir(dc) if not m.startswith('_')][:5], '...')"
@@ -279,4 +279,4 @@ reload-modules:
 	@echo "    importlib.reload(sys.modules['src.utils'])" >> reload_modules.py
 	@echo "print('✅ Módulos recargados - reinicia las imports en el notebook')" >> reload_modules.py
 	@echo "$(GREEN)✅ Script creado: reload_modules.py$(NC)"
-	@echo "$(YELLOW)💡 Ejecuta: %run reload_modules.py en el notebook$(NC)"
+	@echo "$(YELLOW)Ejecuta: %run reload_modules.py en el notebook$(NC)"
